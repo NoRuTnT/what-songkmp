@@ -1,15 +1,19 @@
-package org.whatsong.project
+package org.whatsong.project.page
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import org.jetbrains.compose.web.attributes.InputType
+import org.jetbrains.compose.web.attributes.placeholder
+import org.jetbrains.compose.web.css.Style
 import org.jetbrains.compose.web.dom.*
-import org.jetbrains.compose.web.attributes.*
-import org.jetbrains.compose.web.css.*
+import org.whatsong.project.viewmodels.LoginViewModel
 
 
 @Composable
-fun LoginScreenWeb(loginState: LoginState,
-                   onLoginSuccess: () -> Unit) {
-    Style(LoginStyles) //스타일 적용 선언
+fun LoginScreen(loginViewModel: LoginViewModel) {
+    Style(LoginStyles)
+    val state by loginViewModel.loginState.collectAsState()
 
     Div({ classes(LoginStyles.background) }) {
         Div({ classes(LoginStyles.card) }) {
@@ -19,30 +23,30 @@ fun LoginScreenWeb(loginState: LoginState,
             }
 
             Input(type = InputType.Text, attrs = {
-                value(loginState.username)
-                onInput { loginState.username = it.value }
+                value(state.loginId)
+                onInput { e -> loginViewModel.onLoginIdChange(e.value) }
                 placeholder("아이디 입력")
                 classes(LoginStyles.inputField)
             })
 
             Input(type = InputType.Password, attrs = {
-                value(loginState.password)
-                onInput { loginState.password = it.value }
+                value(state.password)
+                onInput { e -> loginViewModel.onPasswordChange(e.value) }
                 placeholder("비밀번호 입력")
                 classes(LoginStyles.inputField)
             })
 
             Button(attrs = {
                 onClick {
-                    val result = loginState.login()
-                    if (result.success) {
-                        onLoginSuccess() // 화면 전환
-                    }
+                    loginViewModel.login()
                 }
                 classes(LoginStyles.button, LoginStyles.loginBtn)
-            }) { Text("로그인") }
+            }) { Text(if (state.isLoading) "로그인 중.." else "로그인") }
 
             Button(attrs = {
+                onClick {
+                    loginViewModel.guestLogin()
+                }
                 classes(LoginStyles.button, LoginStyles.guestBtn)
             }) { Text("게스트 로그인") }
 
@@ -54,9 +58,11 @@ fun LoginScreenWeb(loginState: LoginState,
                 classes(LoginStyles.button, LoginStyles.signupBtn)
             }) { Text("회원가입") }
 
-            if (loginState.message.isNotEmpty()) {
-                P { Text(loginState.message) }
+            if (state.message!!.isNotEmpty()) {
+                P { state.message?.let { Text(it) } }
             }
+
+
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.whatsong.project
+package org.whatsong.project.page
 
 import org.jetbrains.compose.web.css.*
 
