@@ -1,0 +1,9 @@
+<!-- chatSubmit.svg : paper-plane (send) icon -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Plane body -->
+    <path d="M22 2L11 13"/>
+    <path d="M22 2l-7.5 20-3.5-8-8-3.5L22 2z"/>
+    <!-- Optional motion line -->
+    <path d="M11 13l-3-3"/>
+</svg>
